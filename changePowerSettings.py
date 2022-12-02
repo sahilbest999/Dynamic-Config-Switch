@@ -6,6 +6,8 @@ import screen_brightness_control as sbc
 
 DEVICE = win32api.EnumDisplayDevices()
 
+POWER_CFG_PATH = 'C:\\Windows\\System32\\powercfg.exe'
+
 
 def getRefreshRate() -> int:
     devMode = win32api.EnumDisplaySettings(DEVICE.DeviceName, -1)
@@ -38,7 +40,7 @@ def changeRefreshRate(RR: int):
 
 def getCurrentPowerScheme() -> str:
 
-    return os.popen('powerCfg /GETACTIVESCHEME').read()
+    return os.popen(f'cmd /c {POWER_CFG_PATH} /GETACTIVESCHEME').read()
 
 
 def getGUID(PSStr: str) -> str:
@@ -50,13 +52,13 @@ def changePowerSettings(PSGUID: str):
     currScheme = getCurrentPowerScheme()
     currGUID = getGUID(currScheme)
 
-    print("Current Power Scheme -> " + currGUID)
+    print("Current Power Scheme -> " + currScheme)
 
     if (currGUID == PSGUID):
         print('Power Scheme is already active')
         return
 
-    retCode = os.system(f'powerCfg /S {PSGUID}')
+    retCode = os.system(f'cmd /c {POWER_CFG_PATH} /S {PSGUID}')
 
     if (retCode == 0):
         print("Power Config Changed Successfully")
@@ -90,7 +92,7 @@ def main():
 
     onCharger = psutil.sensors_battery().power_plugged
 
-    currBrightness = getCurrentBrightness()
+    currBrightness = getCurrentBrightness() + 1
 
     if (onCharger):
         changeRefreshRate(144)

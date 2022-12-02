@@ -7,3 +7,5 @@ This script changes Display Refresh Rate & Power Configuration based on the lapt
 ## This script will only work for single monitor setup & only works on windows
 
 
+# why did i do it?
+because acer's software are worthless
